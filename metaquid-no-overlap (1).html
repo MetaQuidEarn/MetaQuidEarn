@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaQuid - Professional Earning Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Telegram Mini App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- Monetag SDK -->
+    <script src='//libtl.com/sdk.js' data-zone='9670918' data-sdk='show_9670918'></script>
+
+    <style>
+        :root {
+            --bg-primary: #0B0E11;
+            --bg-secondary: #151821;
+            --bg-tertiary: #1E2329;
+            --bg-card: #262932;
+            --bg-overlay: rgba(18, 22, 26, 0.95);
+
+            --accent-primary: #3B82F6;
+            --accent-secondary: #10B981;
+            --accent-success: #06D6A0;
+            --accent-warning: #FFB800;
+            --accent-danger: #FF4757;
+
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            --text-muted: #718096;
+
+            --border-primary: rgba(255, 255, 255, 0.08);
+            --border-secondary: rgba(255, 255, 255, 0.12);
+
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-accent: 0 0 24px rgba(59, 130, 246, 0.15);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .earnings-dashboard {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary));
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .earnings-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .earnings-title {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .earnings-amount {
+            font-size: 3.5em;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--accent-success), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(6, 214, 160, 0.3);
+        }
+
+        .earnings-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .earnings-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .earnings-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .earnings-item h3 {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .earnings-item .value {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .auto-earn-section {
+            background: linear-gradient(135deg, #10B981, #059669);
+            border: 2px solid #10B981;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 24px rgba(16, 185, 129, 0.3);
+            text-align: center;
+        }
+
+        .auto-earn-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .auto-earn-description {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .auto-earn-status {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin: 16px 0;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: white;
+        }
+
+        .auto-earn-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .popup-reward-section {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            border: 2px solid #3B82F6;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 24px rgba(59, 130, 246, 0.3);
+            text-align: center;
+        }
+
+        .popup-reward-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .popup-reward-description {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .popup-reward-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-accent);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-danger), #dc2626);
+        }
+
+        .btn-auto-earn {
+            background: linear-gradient(135deg, #10B981, #059669);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-popup-reward {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        .auto-earn-controls .btn,
+        .popup-reward-controls .btn {
+            flex: 1;
+        }
+
+        .performance-stats {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .performance-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--accent-primary);
+        }
+
+        .performance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .performance-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .performance-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .performance-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .performance-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        /* FIXED: Single notification system - prevent overlaps */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 500;
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: var(--transition);
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-success {
+            background: var(--accent-success);
+            border: 1px solid #059669;
+        }
+
+        .notification-error {
+            background: var(--accent-danger);
+            border: 1px solid #dc2626;
+        }
+
+        .notification-warning {
+            background: var(--accent-warning);
+            border: 1px solid #d97706;
+        }
+
+        .notification-info {
+            background: var(--accent-primary);
+            border: 1px solid #2563EB;
+        }
+
+        .loading {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-online {
+            background: var(--accent-success);
+            box-shadow: 0 0 8px var(--accent-success);
+        }
+
+        .status-offline {
+            background: var(--accent-danger);
+        }
+
+        .status-loading {
+            background: var(--accent-warning);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        /* Cross button click indicator */
+        .cross-click-indicator {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #FF4757;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: crossClickPulse 0.8s;
+        }
+
+        @keyframes crossClickPulse {
+            0% { transform: scale(0); opacity: 1; background: rgba(255, 71, 87, 0.3); }
+            50% { transform: scale(1.2); opacity: 0.7; background: rgba(255, 71, 87, 0.1); }
+            100% { transform: scale(1.5); opacity: 0; background: transparent; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+
+            .earnings-info {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .auto-earn-controls,
+            .popup-reward-controls {
+                flex-direction: column;
+            }
+
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: var(--radius-sm);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><span class="emoji">💰</span>MetaQuid Pro</h1>
+            <p>Professional Earning Platform</p>
+        </div>
+
+        <!-- Earnings Dashboard -->
+        <div class="earnings-dashboard">
+            <div class="earnings-display">
+                <div class="earnings-title">Total Earnings</div>
+                <div class="earnings-amount" id="totalEarnings">$0.00</div>
+                <p style="color: var(--text-secondary); font-size: 0.9em;">≈ <span id="displayEarnings">$0.00</span> USD</p>
+            </div>
+
+            <div class="earnings-info">
+                <div class="earnings-item">
+                    <h3>Today's Income</h3>
+                    <div class="value" id="todayIncome">$0.00</div>
+                </div>
+                <div class="earnings-item">
+                    <h3>Completed Tasks</h3>
+                    <div class="value" id="completedTasks">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auto Earn Section -->
+        <div class="auto-earn-section">
+            <div class="auto-earn-title">
+                <span class="emoji">🤖</span>Auto Earn System
+            </div>
+            <div class="auto-earn-description">
+                Automatically watch ads and earn money continuously. Set it and forget it!
+            </div>
+
+            <div class="auto-earn-status" id="autoEarnStatus">
+                <span class="status-indicator status-offline" id="autoStatusIndicator"></span>
+                <span id="autoStatusText">Auto Earn System Ready</span>
+            </div>
+
+            <div class="auto-earn-controls">
+                <button id="startAutoBtn" class="btn btn-auto-earn" onclick="startAutoEarn()">
+                    <span class="emoji">🚀</span>Start Auto Earn
+                </button>
+                <button id="stopAutoBtn" class="btn btn-danger" onclick="stopAutoEarn()" style="display: none;">
+                    <span class="emoji">⏹️</span>Stop Auto
+                </button>
+            </div>
+        </div>
+
+        <!-- Pop-up Reward Section -->
+        <div class="popup-reward-section">
+            <div class="popup-reward-title">
+                <span class="emoji">🎁</span>Pop-up Reward
+            </div>
+            <div class="popup-reward-description">
+                Claim pop-up rewards instantly and earn $0.33 per completed view.
+            </div>
+
+            <div class="popup-reward-controls">
+                <button class="btn btn-popup-reward" onclick="startPopupReward()">
+                    <span class="emoji">🎁</span>Claim Reward
+                </button>
+            </div>
+        </div>
+
+        <!-- Performance Stats -->
+        <div class="performance-stats">
+            <div class="performance-title">
+                <span class="emoji">📊</span>Performance Dashboard
+            </div>
+
+            <div class="performance-grid">
+                <div class="performance-item">
+                    <div class="performance-value" id="successRate" style="color: var(--accent-success);">100%</div>
+                    <div class="performance-label">Success Rate</div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-value" id="totalClicks" style="color: var(--accent-primary);">0</div>
+                    <div class="performance-label">Total Clicks</div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-value" id="sessionTime" style="color: var(--accent-warning);">0m</div>
+                    <div class="performance-label">Session Time</div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-value" id="avgEarning" style="color: var(--accent-secondary);">$0.33</div>
+                    <div class="performance-label">Avg per Task</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App state
+        let userData = {
+            balance: 0,
+            todayEarnings: 0,
+            completedTasks: 0,
+            telegramUser: null,
+            sessionStartTime: Date.now()
+        };
+
+        // Auto earn system state
+        let autoEarnState = {
+            isRunning: false,
+            adsWatched: 0,
+            totalEarnings: 0,
+            shouldStop: false,
+            successfulClicks: 0,
+            totalClicks: 0
+        };
+
+        // FIXED: Popup reward tracking with completion lock
+        let popupRewardState = {
+            isActive: false,
+            startTime: 0,
+            completed: false,
+            locked: false  // Prevent multiple completions
+        };
+
+        // FIXED: Notification system with overlap prevention
+        let notificationSystem = {
+            currentNotification: null,
+            queue: [],
+            isShowing: false
+        };
+
+        // WORKING Cross-click system (restored from successful version)
+        let crossClickSystem = {
+            isActive: false,
+            monitorInterval: null,
+            clickTimeout: null,
+            crossSelectors: [
+                // Top-right corner close buttons (most common)
+                '[style*="position: absolute"][style*="top"][style*="right"]',
+                '[style*="position: fixed"][style*="top"][style*="right"]',
+
+                // Close button selectors
+                'button[aria-label*="close" i]',
+                'button[title*="close" i]',
+                'div[role="button"][aria-label*="close" i]',
+
+                // X button text content
+                'button:contains("×")',
+                'button:contains("✕")', 
+                'div:contains("×")',
+                'span:contains("×")',
+
+                // Common close button classes
+                '.close',
+                '.close-button',
+                '.close-btn',
+                '.modal-close',
+                '.popup-close',
+                '.ad-close',
+
+                // SVG close icons
+                'svg[*|href*="close"]',
+                'svg[class*="close"]',
+                'path[d*="M"]', // X shape paths
+
+                // Generic close patterns
+                '[onclick*="close"]',
+                '[onclick*="Close"]',
+                '[data-dismiss]',
+                '[data-close]',
+
+                // Monetag specific
+                '.monetag-close',
+                '[class*="monetag"] button',
+
+                // Position based (top-right corner)
+                'button[style*="right: 0"]',
+                'button[style*="right: 5px"]',
+                'button[style*="right: 10px"]',
+                'div[style*="right: 0"][style*="top"]',
+                'div[style*="right: 5px"][style*="top"]',
+                'div[style*="right: 10px"][style*="top"]',
+
+                // Z-index based (overlays)
+                '[style*="z-index: 999"]',
+                '[style*="z-index: 9999"]'
+            ],
+            lastClickTime: 0
+        };
+
+        // Initialize Telegram WebApp
+        function initTelegramApp() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+
+                if (tg.BackButton) {
+                    tg.BackButton.show();
+                    tg.BackButton.onClick(() => {
+                        if (autoEarnState.isRunning) {
+                            stopAutoEarn();
+                            showSingleNotification('🛑 Auto earn stopped', 'warning');
+                            return;
+                        }
+                        tg.close();
+                    });
+                }
+
+                if (tg.initDataUnsafe.user) {
+                    userData.telegramUser = tg.initDataUnsafe.user;
+                }
+            }
+            loadUserData();
+        }
+
+        function loadUserData() {
+            const saved = localStorage.getItem('metaquid_pro_no_overlap');
+            if (saved) {
+                try {
+                    const savedData = JSON.parse(saved);
+                    userData = { ...userData, ...savedData };
+                    updateDisplay();
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+        }
+
+        function saveUserData() {
+            localStorage.setItem('metaquid_pro_no_overlap', JSON.stringify(userData));
+        }
+
+        // FIXED: Single notification system - prevent overlaps
+        function showSingleNotification(message, type) {
+            // Clear any existing notification
+            if (notificationSystem.currentNotification) {
+                notificationSystem.currentNotification.remove();
+                notificationSystem.currentNotification = null;
+            }
+
+            // Prevent spam - wait if already showing
+            if (notificationSystem.isShowing) {
+                notificationSystem.queue.push({message, type});
+                return;
+            }
+
+            notificationSystem.isShowing = true;
+
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            notificationSystem.currentNotification = notification;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                    notificationSystem.currentNotification = null;
+                    notificationSystem.isShowing = false;
+
+                    // Process queue
+                    if (notificationSystem.queue.length > 0) {
+                        const next = notificationSystem.queue.shift();
+                        setTimeout(() => showSingleNotification(next.message, next.type), 500);
+                    }
+                }, 300);
+            }, 3000); // Shorter duration to prevent overlap
+        }
+
+        // WORKING CROSS-CLICK SYSTEM (restored)
+        function initCrossClickMonitoring() {
+            console.log('🎯 Initializing cross-click system...');
+
+            crossClickSystem.isActive = true;
+
+            // Monitor for cross buttons every 100ms
+            crossClickSystem.monitorInterval = setInterval(() => {
+                if (crossClickSystem.isActive) {
+                    detectAndClickCrossButtons();
+                }
+            }, 100);
+
+            // Monitor DOM changes for new cross buttons
+            const observer = new MutationObserver((mutations) => {
+                if (crossClickSystem.isActive) {
+                    mutations.forEach(() => {
+                        setTimeout(() => detectAndClickCrossButtons(), 50);
+                    });
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
+
+            // Monitor all frames
+            monitorAllFramesForCross();
+        }
+
+        function detectAndClickCrossButtons() {
+            // Check main document
+            clickCrossInContext(document);
+
+            // Check all iframes
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                try {
+                    if (iframe.contentDocument) {
+                        clickCrossInContext(iframe.contentDocument);
+                    }
+                } catch (e) {
+                    // Cross-origin iframe - continue
+                }
+            });
+        }
+
+        function clickCrossInContext(doc) {
+            if (!doc) return;
+
+            // First check if we detect Monetag completion screen
+            const bodyText = doc.body ? (doc.body.innerText || '') : '';
+            const hasMonetag = bodyText.includes('Download is ready') || 
+                              bodyText.includes('ads by Monetag') ||
+                              bodyText.includes('Continue');
+
+            if (!hasMonetag) return; // Only click on Monetag screens
+
+            console.log('🎯 Monetag screen detected, looking for cross button...');
+
+            // Try each cross selector
+            for (const selector of crossClickSystem.crossSelectors) {
+                try {
+                    const elements = doc.querySelectorAll(selector);
+                    elements.forEach(element => {
+                        if (shouldClickCrossElement(element)) {
+                            performCrossClick(element);
+                        }
+                    });
+                } catch (e) {
+                    // Selector might not be valid, continue
+                }
+            }
+
+            // Special check for top-right positioned elements
+            checkTopRightElements(doc);
+        }
+
+        function checkTopRightElements(doc) {
+            const allElements = doc.querySelectorAll('*');
+            allElements.forEach(element => {
+                if (isTopRightElement(element) && isLikelyCloseButton(element)) {
+                    performCrossClick(element);
+                }
+            });
+        }
+
+        function isTopRightElement(element) {
+            if (!element.offsetParent) return false;
+
+            const rect = element.getBoundingClientRect();
+
+            // Check if element is in top-right corner
+            const isTopRight = (
+                rect.right >= window.innerWidth - 50 && // Within 50px of right edge
+                rect.top <= 50 && // Within 50px of top edge
+                rect.width <= 50 && // Small element (likely close button)
+                rect.height <= 50
+            );
+
+            return isTopRight;
+        }
+
+        function isLikelyCloseButton(element) {
+            const text = (element.innerText || element.textContent || '').trim();
+            const className = (element.className || '').toLowerCase();
+            const tagName = element.tagName.toLowerCase();
+
+            // Check for X symbols
+            const hasXSymbol = text === '×' || text === '✕' || text === 'X' || text === '╳';
+
+            // Check for close-related classes
+            const hasCloseClass = className.includes('close') || className.includes('dismiss');
+
+            // Check if it's a clickable element
+            const isClickable = tagName === 'button' || 
+                               element.getAttribute('role') === 'button' ||
+                               element.onclick ||
+                               className.includes('btn');
+
+            return (hasXSymbol || hasCloseClass) && isClickable;
+        }
+
+        function shouldClickCrossElement(element) {
+            if (!element || !element.offsetParent) return false; // Hidden element
+
+            const currentTime = Date.now();
+
+            // Don't click the same element too quickly
+            if (currentTime - crossClickSystem.lastClickTime < 1000) return false;
+
+            const text = (element.innerText || element.textContent || '').toLowerCase().trim();
+            const className = (element.className || '').toLowerCase();
+            const ariaLabel = (element.getAttribute('aria-label') || '').toLowerCase();
+
+            // Check if it's a close/cross button
+            const isCloseButton = text === '×' || text === '✕' || text === 'x' ||
+                                 text === 'close' || className.includes('close') ||
+                                 ariaLabel.includes('close');
+
+            // Check if it's in top-right corner
+            const isTopRight = isTopRightElement(element);
+
+            return (isCloseButton || isTopRight) && element.offsetWidth > 0 && element.offsetHeight > 0;
+        }
+
+        function performCrossClick(element) {
+            try {
+                const currentTime = Date.now();
+                crossClickSystem.lastClickTime = currentTime;
+                autoEarnState.totalClicks++;
+
+                // Show visual indicator
+                showCrossClickIndicator(element);
+
+                // Multiple click methods for maximum success
+                element.click();
+
+                // Dispatch various events
+                ['mousedown', 'mouseup', 'click', 'touchstart', 'touchend'].forEach(eventType => {
+                    element.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
+                });
+
+                // Try focus and keyboard events
+                if (element.focus) element.focus();
+                element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+                element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space', bubbles: true }));
+
+                autoEarnState.successfulClicks++;
+                console.log(`✅ Cross-clicked: ${element.tagName} - ${element.className || 'no-class'}`);
+
+                // Update stats
+                updateStats();
+
+                // FIXED: Single completion with lock
+                setTimeout(() => {
+                    completeSingleTask();
+                }, 500);
+
+                return true;
+            } catch (e) {
+                console.log('❌ Cross-click failed:', e);
+                return false;
+            }
+        }
+
+        function showCrossClickIndicator(element) {
+            const rect = element.getBoundingClientRect();
+            const indicator = document.createElement('div');
+            indicator.className = 'cross-click-indicator';
+            indicator.style.left = (rect.left + rect.width/2 - 20) + 'px';
+            indicator.style.top = (rect.top + rect.height/2 - 20) + 'px';
+
+            document.body.appendChild(indicator);
+            setTimeout(() => indicator.remove(), 800);
+        }
+
+        function monitorAllFramesForCross() {
+            // Monitor window focus for ad completion detection
+            document.addEventListener('visibilitychange', () => {
+                if (crossClickSystem.isActive) {
+                    if (document.hidden) {
+                        console.log('👁️ Page hidden - ad likely opened');
+                    } else {
+                        console.log('👁️ Page visible - checking for cross buttons');
+                        setTimeout(() => detectAndClickCrossButtons(), 500);
+                    }
+                }
+            });
+        }
+
+        // FIXED: Launch ad with single completion
+        function launchAdWithCrossClick(adType = 'regular') {
+            return new Promise((resolve, reject) => {
+                console.log(`🚀 Launching ${adType} ad with cross-click monitoring...`);
+
+                if (typeof window.show_9670918 !== 'function') {
+                    reject(new Error('Ad SDK not available'));
+                    return;
+                }
+
+                // Activate cross-click monitoring
+                crossClickSystem.isActive = true;
+
+                try {
+                    if (adType === 'popup') {
+                        // FIXED: Better popup ad handling with single completion
+                        if (popupRewardState.locked) {
+                            console.log('🔒 Popup reward already in progress');
+                            reject(new Error('Popup already in progress'));
+                            return;
+                        }
+
+                        popupRewardState.isActive = true;
+                        popupRewardState.startTime = Date.now();
+                        popupRewardState.completed = false;
+                        popupRewardState.locked = true;
+
+                        console.log('🎁 Launching popup reward ad...');
+
+                        // Launch popup ad
+                        window.show_9670918('pop')
+                            .then((result) => {
+                                console.log('✅ Popup ad SDK callback received:', result);
+
+                                // SDK completion - but only if not completed by cross-click
+                                setTimeout(() => {
+                                    if (popupRewardState.isActive && !popupRewardState.completed) {
+                                        console.log('🔄 SDK callback completing popup reward...');
+                                        completeSingleTask();
+                                    }
+                                }, 1000);
+
+                                resolve(true);
+                            })
+                            .catch((error) => {
+                                console.error('❌ Popup ad SDK failed:', error);
+                                resetPopupState();
+                                reject(error);
+                            });
+
+                        // Backup completion timer
+                        setTimeout(() => {
+                            if (popupRewardState.isActive && !popupRewardState.completed) {
+                                console.log('⏰ Popup reward timeout - force completing...');
+                                completeSingleTask();
+                            }
+                        }, 15000); // 15 second timeout
+
+                    } else {
+                        // Launch regular ad
+                        window.show_9670918()
+                            .then((result) => {
+                                console.log('✅ Regular ad launched:', result);
+                                resolve(true);
+                            })
+                            .catch((error) => {
+                                console.error('❌ Regular ad launch failed:', error);
+                                crossClickSystem.isActive = false;
+                                reject(error);
+                            });
+                    }
+                } catch (error) {
+                    console.error('❌ Ad launch error:', error);
+                    crossClickSystem.isActive = false;
+                    resetPopupState();
+                    reject(error);
+                }
+            });
+        }
+
+        function resetPopupState() {
+            popupRewardState.isActive = false;
+            popupRewardState.completed = false;
+            popupRewardState.locked = false;
+        }
+
+        // FIXED: Single task completion with lock
+        function completeSingleTask() {
+            // Prevent multiple completions
+            if (popupRewardState.isActive && popupRewardState.completed) {
+                console.log('🔒 Task already completed, skipping');
+                return;
+            }
+
+            userData.completedTasks++;
+            userData.balance += 0.33;
+            userData.todayEarnings += 0.33;
+
+            if (autoEarnState.isRunning) {
+                autoEarnState.adsWatched++;
+                autoEarnState.totalEarnings += 0.33;
+            }
+
+            // Mark popup as completed if it was active
+            if (popupRewardState.isActive) {
+                popupRewardState.completed = true;
+                setTimeout(() => resetPopupState(), 2000); // Reset after 2s
+            }
+
+            updateDisplay();
+            updateStats();
+            showSingleNotification('✅ Task completed! Earned $0.33', 'success');
+
+            saveUserData();
+
+            console.log(`💰 Balance updated: $${userData.balance.toFixed(2)}`);
+
+            // Continue auto earn if running
+            if (autoEarnState.isRunning && !autoEarnState.shouldStop) {
+                setTimeout(() => {
+                    runNextAutoEarnAd();
+                }, 3000);
+            }
+        }
+
+        // FIXED: Pop-up Reward with single completion
+        function startPopupReward() {
+            if (popupRewardState.locked) {
+                showSingleNotification('⚠️ Please wait, popup in progress', 'warning');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="loading"></div> Loading...';
+            btn.disabled = true;
+
+            showSingleNotification('🎁 Loading pop-up reward...', 'info');
+
+            launchAdWithCrossClick('popup')
+                .then(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                })
+                .catch((error) => {
+                    showSingleNotification('❌ Pop-up reward failed: ' + error.message, 'error');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    resetPopupState();
+                });
+        }
+
+        // Auto earn system
+        function startAutoEarn() {
+            if (autoEarnState.isRunning) return;
+
+            autoEarnState.isRunning = true;
+            autoEarnState.shouldStop = false;
+            autoEarnState.adsWatched = 0;
+            autoEarnState.totalEarnings = 0;
+
+            document.getElementById('startAutoBtn').style.display = 'none';
+            document.getElementById('stopAutoBtn').style.display = 'block';
+
+            updateAutoStatus('🚀 Auto earn system activated...', 'loading');
+            showSingleNotification('🤖 Auto earn started!', 'success');
+
+            setTimeout(() => runNextAutoEarnAd(), 2000);
+        }
+
+        function stopAutoEarn() {
+            autoEarnState.shouldStop = true;
+            autoEarnState.isRunning = false;
+
+            document.getElementById('startAutoBtn').style.display = 'block';
+            document.getElementById('stopAutoBtn').style.display = 'none';
+
+            updateAutoStatus(
+                `⏹️ STOPPED | Watched: ${autoEarnState.adsWatched} ads | Earned: $${autoEarnState.totalEarnings.toFixed(2)}`,
+                'offline'
+            );
+
+            showSingleNotification(`🛑 Auto earn stopped. Watched ${autoEarnState.adsWatched} ads!`, 'success');
+        }
+
+        function runNextAutoEarnAd() {
+            if (!autoEarnState.isRunning || autoEarnState.shouldStop) {
+                return;
+            }
+
+            updateAutoStatus(`🔄 Loading ad ${autoEarnState.adsWatched + 1}...`, 'loading');
+
+            launchAdWithCrossClick('regular')
+                .then(() => {
+                    updateAutoStatus(
+                        `🎯 Ad ${autoEarnState.adsWatched + 1} | Total: ${autoEarnState.adsWatched} | Earned: $${autoEarnState.totalEarnings.toFixed(2)}`,
+                        'online'
+                    );
+                })
+                .catch((error) => {
+                    console.error('Auto earn ad failed:', error);
+
+                    updateAutoStatus(`⚠️ Ad failed, retrying...`, 'loading');
+
+                    setTimeout(() => {
+                        if (autoEarnState.isRunning && !autoEarnState.shouldStop) {
+                            runNextAutoEarnAd();
+                        }
+                    }, 5000);
+                });
+        }
+
+        function updateAutoStatus(message, status = 'offline') {
+            const statusText = document.getElementById('autoStatusText');
+            const statusIndicator = document.getElementById('autoStatusIndicator');
+
+            statusText.textContent = message;
+            statusIndicator.className = `status-indicator status-${status}`;
+        }
+
+        function updateDisplay() {
+            document.getElementById('totalEarnings').textContent = `$${userData.balance.toFixed(2)}`;
+            document.getElementById('displayEarnings').textContent = `$${userData.balance.toFixed(2)}`;
+            document.getElementById('todayIncome').textContent = `$${userData.todayEarnings.toFixed(2)}`;
+            document.getElementById('completedTasks').textContent = userData.completedTasks;
+        }
+
+        function updateStats() {
+            const successRate = autoEarnState.totalClicks > 0 ? 
+                (autoEarnState.successfulClicks / autoEarnState.totalClicks * 100) : 100;
+
+            document.getElementById('successRate').textContent = `${successRate.toFixed(0)}%`;
+            document.getElementById('totalClicks').textContent = autoEarnState.totalClicks;
+
+            const sessionMinutes = Math.floor((Date.now() - userData.sessionStartTime) / 60000);
+            document.getElementById('sessionTime').textContent = `${sessionMinutes}m`;
+
+            document.getElementById('avgEarning').textContent = '$0.33';
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            initTelegramApp();
+            initCrossClickMonitoring();
+            updateDisplay();
+            updateStats();
+            console.log('💰 MetaQuid Pro - NO OVERLAP VERSION initialized!');
+        });
+
+        // Auto-save and update stats every 5 seconds
+        setInterval(() => {
+            saveUserData();
+            updateStats();
+        }, 5000);
+
+        // Prevent page unload during operations
+        window.addEventListener('beforeunload', function (e) {
+            if (autoEarnState.isRunning || popupRewardState.locked) {
+                const message = 'Earning system is active!';
+                e.returnValue = message;
+                return message;
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('unload', function() {
+            if (crossClickSystem.monitorInterval) {
+                clearInterval(crossClickSystem.monitorInterval);
+            }
+        });
+    </script>
+</body>
+</html>
